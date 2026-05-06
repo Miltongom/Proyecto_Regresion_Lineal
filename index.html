@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Regresión Lineal Simple</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/math-engine.js" defer></script>
+    <script src="js/simulation.js" defer></script>
+    <script src="js/visualization.js" defer></script>
+    <script src="js/chatbot.js" defer></script>
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+
+    <!-- ═══════════ NAVEGACIÓN LATERAL ═══════════ -->
+    <nav id="nav-sidebar">
+        <div class="nav-brand">
+            <div class="nav-brand-icon">📈</div>
+            <div class="nav-brand-text">
+                <strong>RegLineal</strong>
+                <span>Simulador IA</span>
+            </div>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a class="nav-item active" data-page="dashboard" href="#">
+                <span class="nav-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </span>
+                <span class="nav-label">Inicio</span>
+            </a></li>
+            <li><a class="nav-item" data-page="datos" href="#">
+                <span class="nav-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+                </span>
+                <span class="nav-label">Configuración</span>
+            </a></li>
+            <li><a class="nav-item" data-page="simulation" href="#">
+                <span class="nav-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </span>
+                <span class="nav-label">Simulación</span>
+                <span class="nav-badge" id="nav-iter-badge" style="display:none"></span>
+            </a></li>
+            <li><a class="nav-item" data-page="charts" href="#">
+                <span class="nav-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                </span>
+                <span class="nav-label">Gráficas</span>
+            </a></li>
+            <li><a class="nav-item" data-page="education" href="#">
+                <span class="nav-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                </span>
+                <span class="nav-label">Educativo</span>
+            </a></li>
+            <li><a class="nav-item" data-page="chatbot" href="#">
+                <span class="nav-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </span>
+                <span class="nav-label">Asistente IA</span>
+            </a></li>
+        </ul>
+
+        <div class="nav-footer">
+            <span class="nav-footer-badge">Inteligencia Artificial</span>
+        </div>
+    </nav>
+
+    <!-- ═══════════ ÁREA PRINCIPAL ═══════════ -->
+    <div id="app-shell">
+
+        <!-- Topbar -->
+        <header id="topbar">
+            <div class="topbar-left">
+                <button id="btn-toggle-nav" class="icon-btn" aria-label="Menú">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <span id="topbar-title">Inicio</span>
+            </div>
+            <div class="topbar-right" id="topbar-params">
+                <div class="tparam" id="tp-m" style="display:none">
+                    <span class="tparam-label">m</span>
+                    <strong id="current-m">—</strong>
+                </div>
+                <div class="tparam" id="tp-b" style="display:none">
+                    <span class="tparam-label">b</span>
+                    <strong id="current-b">—</strong>
+                </div>
+                <div class="tparam tparam-mse" id="tp-mse" style="display:none">
+                    <span class="tparam-label">MSE</span>
+                    <strong id="current-error">—</strong>
+                </div>
+                <span id="current-iteration-meta" class="tparam-chip" style="display:none"></span>
+            </div>
+        </header>
+
+        <!-- Páginas -->
+        <main id="app-content">
+
+            <!-- ══ INICIO ══ -->
+            <section class="page active" id="page-dashboard">
+                <div class="hero-section">
+                    <div class="hero-text">
+                        <div class="hero-eyebrow">Inteligencia Artificial · Descenso por Gradiente</div>
+                        <h1 class="hero-title">Simulador de Regresión<br>Lineal Simple</h1>
+                        <p class="hero-desc">Visualiza paso a paso cómo un modelo aprende: predicciones, errores, gradientes y actualización de parámetros — todo con tus propios datos.</p>
+                        <div class="hero-btns">
+                            <button class="btn btn-primary btn-lg" data-nav="datos">Comenzar simulación →</button>
+                            <button class="btn btn-ghost btn-lg" data-nav="education">Ver teoría</button>
+                        </div>
+                    </div>
+                    <div class="hero-card">
+                        <div class="hero-formula-block">
+                            <div class="hf-row">ŷ = m · x + b</div>
+                            <div class="hf-divider"></div>
+                            <div class="hf-row small">m ← m − α · ∂E/∂m</div>
+                            <div class="hf-row small">b ← b − α · ∂E/∂b</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpi-row">
+                    <div class="kpi-card">
+                        <div class="kpi-icon kpi-blue">m</div>
+                        <div class="kpi-body"><span class="kpi-label">Pendiente</span><strong class="kpi-val" id="dash-m">—</strong></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon kpi-cyan">b</div>
+                        <div class="kpi-body"><span class="kpi-label">Intercepto</span><strong class="kpi-val" id="dash-b">—</strong></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon kpi-green">E</div>
+                        <div class="kpi-body"><span class="kpi-label">MSE</span><strong class="kpi-val" id="dash-mse">—</strong></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon kpi-purple">#</div>
+                        <div class="kpi-body"><span class="kpi-label">Iteraciones</span><strong class="kpi-val" id="dash-iters">—</strong></div>
+                    </div>
+                </div>
+
+                <div class="workflow-row">
+                    <div class="wf-card" data-nav="datos">
+                        <div class="wf-num">1</div>
+                        <h3>Configurar</h3>
+                        <p>Ingresa X, Y, parámetros y learning rate.</p>
+                        <span class="wf-link">Ir →</span>
+                    </div>
+                    <div class="wf-connector"></div>
+                    <div class="wf-card" data-nav="simulation">
+                        <div class="wf-num">2</div>
+                        <h3>Simular</h3>
+                        <p>Navega los 9 pasos de cada iteración.</p>
+                        <span class="wf-link">Ir →</span>
+                    </div>
+                    <div class="wf-connector"></div>
+                    <div class="wf-card" data-nav="charts">
+                        <div class="wf-num">3</div>
+                        <h3>Visualizar</h3>
+                        <p>Observa la recta y la convergencia del error.</p>
+                        <span class="wf-link">Ir →</span>
+                    </div>
+                    <div class="wf-connector"></div>
+                    <div class="wf-card" data-nav="chatbot">
+                        <div class="wf-num">4</div>
+                        <h3>Preguntar</h3>
+                        <p>Resuelve dudas con el asistente IA.</p>
+                        <span class="wf-link">Ir →</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══ CONFIGURACIÓN ══ -->
+            <section class="page" id="page-datos">
+                <div class="page-top">
+                    <h2 class="page-title">Configuración del modelo</h2>
+                    <p class="page-subtitle">Ingresa los datos de entrenamiento y los hiperparámetros.</p>
+                </div>
+
+                <div class="config-grid">
+                    <div class="card config-form">
+                        <h3 class="section-heading">Datos de entrenamiento</h3>
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="input-x">Valores de X <em>(separados por comas)</em></label>
+                                <textarea id="input-x" rows="3" placeholder="1, 2, 3, 4, 5"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="input-y">Valores de Y <em>(separados por comas)</em></label>
+                                <textarea id="input-y" rows="3" placeholder="2, 4, 5, 4, 5"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-divider"><span>Parámetros iniciales</span></div>
+
+                        <div class="form-row-4">
+                            <div class="form-group">
+                                <label for="input-m">Pendiente m₀</label>
+                                <input id="input-m" type="number" step="0.01" value="0">
+                                <small>Inicio de la pendiente</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="input-b">Intercepto b₀</label>
+                                <input id="input-b" type="number" step="0.01" value="0">
+                                <small>Inicio del intercepto</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="input-lr">Learning rate α</label>
+                                <input id="input-lr" type="number" step="0.001" value="0.01">
+                                <small>Tamaño de cada paso</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="input-iters">Iteraciones</label>
+                                <input id="input-iters" type="number" value="10" min="1" max="1000">
+                                <small>Actualizaciones de m y b</small>
+                            </div>
+                        </div>
+
+                        <div id="config-error" class="alert alert-error hidden"></div>
+                        <div id="config-success" class="alert alert-success hidden"></div>
+
+                        <div class="form-actions">
+                            <button id="btn-start" class="btn btn-primary btn-lg">🚀 Iniciar Simulación</button>
+                            <button id="btn-reset" class="btn btn-ghost">Cargar ejemplo</button>
+                        </div>
+                    </div>
+
+                    <div class="card config-preview">
+                        <h3 class="section-heading">Vista previa de datos</h3>
+                        <div id="data-preview-table">
+                            <p class="muted-msg">Ingresa datos para ver la vista previa.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══ SIMULACIÓN ══ -->
+            <section class="page" id="page-simulation">
+                <div class="page-top">
+                    <h2 class="page-title">Simulación paso a paso</h2>
+                    <p class="page-subtitle">Navega por cada uno de los 9 pasos de cada iteración del descenso por gradiente.</p>
+                </div>
+
+                <div class="sim-container">
+                    <!-- Controles -->
+                    <div class="card sim-controls">
+                        <div class="sim-ctrl-block">
+                            <span class="ctrl-lbl">ITERACIÓN</span>
+                            <div class="ctrl-row">
+                                <button id="btn-prev-iteration" class="btn btn-icon">&#9664;</button>
+                                <span id="iteration-indicator" class="ctrl-val">— / —</span>
+                                <button id="btn-next-iteration" class="btn btn-icon">&#9654;</button>
+                            </div>
+                        </div>
+                        <div class="sim-ctrl-sep"></div>
+                        <div class="sim-ctrl-block">
+                            <span class="ctrl-lbl">PASO</span>
+                            <div class="ctrl-row">
+                                <button id="btn-prev-step" class="btn btn-icon">&#9664;</button>
+                                <span id="step-indicator" class="ctrl-val">— / 9</span>
+                                <button id="btn-next-step" class="btn btn-icon">&#9654;</button>
+                            </div>
+                        </div>
+                        <div class="sim-ctrl-sep"></div>
+                        <button id="btn-run-all" class="btn btn-primary">⚡ Ver último paso</button>
+                    </div>
+
+                    <!-- Progress dots -->
+                    <div class="card step-progress-bar">
+                        <div class="step-dots-wrap" id="step-dots"></div>
+                    </div>
+
+                    <!-- Contenido del paso -->
+                    <div id="step-display" class="card step-display empty-state">
+                        <div class="empty-inner">
+                            <div class="empty-icon">▶</div>
+                            <h3>Sin simulación activa</h3>
+                            <p>Ve a <strong>Configuración</strong> e inicia la simulación para navegar aquí.</p>
+                            <button class="btn btn-primary" data-nav="datos">Ir a Configuración</button>
+                        </div>
+                    </div>
+
+                    <!-- Historial -->
+                    <div class="card">
+                        <div class="card-top-row">
+                            <h3>Historial de iteraciones</h3>
+                            <p class="muted-msg">Evolución de m, b y MSE en cada actualización</p>
+                        </div>
+                        <div class="table-wrap compact-table">
+                            <table>
+                                <thead>
+                                    <tr><th>#</th><th>m</th><th>b</th><th>MSE</th></tr>
+                                </thead>
+                                <tbody id="iteration-history-body">
+                                    <tr><td colspan="4" class="muted-msg">Sin datos aún.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══ GRÁFICAS ══ -->
+            <section class="page" id="page-charts">
+                <div class="page-top">
+                    <h2 class="page-title">Visualización gráfica</h2>
+                    <p class="page-subtitle">Observa la línea de regresión ajustarse y el error converger iteración a iteración.</p>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="card chart-card-main">
+                        <div class="card-top-row">
+                            <div>
+                                <h3>Datos reales y línea de regresión</h3>
+                                <p class="muted-msg">Puntos reales vs. modelo estimado en la iteración actual</p>
+                            </div>
+                            <label class="toggle-pill">
+                                <input type="checkbox" id="toggle-lr-compare">
+                                <span>Comparar α</span>
+                            </label>
+                        </div>
+                        <div class="chart-wrap">
+                            <canvas id="regression-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card chart-card-error" id="error-chart-card">
+                        <div class="card-top-row">
+                            <div>
+                                <h3>Convergencia del error (MSE)</h3>
+                                <p class="muted-msg">El MSE debe disminuir con cada iteración</p>
+                            </div>
+                            <label class="toggle-pill">
+                                <input type="checkbox" id="toggle-error-chart" checked>
+                                <span>Mostrar</span>
+                            </label>
+                        </div>
+                        <div class="chart-wrap chart-wrap-sm">
+                            <canvas id="error-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══ EDUCATIVO ══ -->
+            <section class="page" id="page-education">
+                <div class="page-top">
+                    <h2 class="page-title">Modo Educativo</h2>
+                    <p class="page-subtitle">Comprende los fundamentos matemáticos detrás del simulador.</p>
+                </div>
+
+                <div class="edu-grid">
+                    <div class="card edu-intro-card">
+                        <h3>¿Qué es la regresión lineal simple?</h3>
+                        <p>Es un modelo supervisado que describe la relación entre una variable independiente <strong>x</strong> y una dependiente <strong>y</strong> con una recta. El objetivo es encontrar <strong>m</strong> y <strong>b</strong> que minimicen el error.</p>
+                        <div class="formula-box">ŷ = m · x + b</div>
+                        <p>Para encontrar los mejores parámetros usamos <strong>descenso por gradiente</strong>: una técnica de optimización iterativa.</p>
+                    </div>
+
+                    <div class="card edu-intro-card">
+                        <h3>¿Por qué MSE como función de error?</h3>
+                        <p>El Error Cuadrático Medio penaliza más los errores grandes, es siempre positivo y es derivable —lo que permite aplicar cálculo diferencial para optimizar.</p>
+                        <div class="formula-box">MSE = (1/n) · Σ (yᵢ − ŷᵢ)²</div>
+                    </div>
+
+                    <div class="card edu-steps-card">
+                        <h3>Los 9 pasos del simulador</h3>
+                        <div class="edu-steps-list">
+                            <div class="edu-step"><span class="edu-step-n">1</span><div><h4>Parámetros actuales</h4><p>Muestra m y b antes de la iteración: el punto de partida del cálculo.</p></div></div>
+                            <div class="edu-step"><span class="edu-step-n">2</span><div><h4>Predicciones ŷ</h4><p>Para cada x, el modelo calcula ŷ con la recta actual.</p><div class="formula-box">ŷᵢ = m · xᵢ + b</div></div></div>
+                            <div class="edu-step"><span class="edu-step-n">3</span><div><h4>Errores e</h4><p>Diferencia entre el valor real y la predicción.</p><div class="formula-box">eᵢ = yᵢ − ŷᵢ</div></div></div>
+                            <div class="edu-step"><span class="edu-step-n">4</span><div><h4>Error cuadrático e²</h4><p>Elevar al cuadrado elimina el signo y penaliza errores grandes.</p><div class="formula-box">eᵢ² = (yᵢ − ŷᵢ)²</div></div></div>
+                            <div class="edu-step"><span class="edu-step-n">5</span><div><h4>MSE total</h4><p>Promedio de todos los errores cuadrados: métrica global del modelo.</p><div class="formula-box">MSE = (1/n) · Σeᵢ²</div></div></div>
+                            <div class="edu-step"><span class="edu-step-n">6</span><div><h4>Matrices</h4><p>Organización de datos en vectores para facilitar el cálculo de gradientes.</p></div></div>
+                            <div class="edu-step"><span class="edu-step-n">7</span><div><h4>Gradiente ∂E/∂b</h4><p>¿Cuánto mover b para reducir el error?</p><div class="formula-box">∂E/∂b = (−2/n) · Σeᵢ</div></div></div>
+                            <div class="edu-step"><span class="edu-step-n">8</span><div><h4>Gradiente ∂E/∂m</h4><p>¿Cuánto mover m para reducir el error?</p><div class="formula-box">∂E/∂m = (−2/n) · Σ(eᵢ · xᵢ)</div></div></div>
+                            <div class="edu-step"><span class="edu-step-n">9</span><div><h4>Actualización de parámetros</h4><p>Se ajusta la recta en dirección de menor error.</p><div class="formula-box">m ← m − α · (∂E/∂m)<br>b ← b − α · (∂E/∂b)</div></div></div>
+                        </div>
+                    </div>
+
+                    <div class="card edu-intro-card">
+                        <h3>Interpretación intuitiva</h3>
+                        <p>Imagina el error como una montaña. El descenso por gradiente avanza en la dirección que más rápido reduce la altura. El learning rate α controla el tamaño del paso:</p>
+                        <ul>
+                            <li>α <strong>pequeño</strong> → aprendizaje lento pero preciso</li>
+                            <li>α <strong>grande</strong> → rápido pero puede divergir (saltar por encima del mínimo)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══ CHATBOT ══ -->
+            <section class="page" id="page-chatbot">
+                <div class="page-top">
+                    <h2 class="page-title">Asistente IA</h2>
+                    <p class="page-subtitle">Pregunta cualquier duda sobre Machine Learning, regresión lineal o descenso por gradiente.</p>
+                </div>
+
+                <div class="chatbot-grid">
+                    <div class="card chatbot-config-panel">
+                        <h3 class="section-heading">Configuración</h3>
+                        <div class="form-group">
+                            <label for="provider-select">Proveedor</label>
+                            <select id="provider-select">
+                                <option value="openai">OpenAI (GPT)</option>
+                                <option value="gemini">Google Gemini</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="api-key-input">API Key</label>
+                            <input id="api-key-input" type="password" placeholder="Pega tu clave aquí...">
+                        </div>
+                        <button id="save-api-key" class="btn btn-primary">Guardar</button>
+
+                        <div class="api-links">
+                            <p>🔒 La clave se guarda solo en tu navegador.</p>
+                            <p><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">→ Obtener key OpenAI</a></p>
+                            <p><a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">→ Obtener key Gemini</a></p>
+                        </div>
+
+                        <div class="suggested-questions">
+                            <p class="sq-title">Preguntas sugeridas</p>
+                            <button class="sq-btn" data-q="¿Qué es el descenso por gradiente?">¿Qué es el descenso por gradiente?</button>
+                            <button class="sq-btn" data-q="¿Cómo afecta el learning rate al entrenamiento?">¿Cómo afecta el learning rate?</button>
+                            <button class="sq-btn" data-q="¿Qué pasa si el MSE no converge?">¿Qué pasa si el MSE no converge?</button>
+                            <button class="sq-btn" data-q="Explícame la fórmula de la pendiente m">Explícame la fórmula de m</button>
+                        </div>
+                    </div>
+
+                    <div class="card chatbot-chat-panel">
+                        <div id="chat-messages" class="chat-messages">
+                            <div class="msg-row assistant">
+                                <div class="msg-avatar">🤖</div>
+                                <div class="msg-bubble">¡Hola! Soy tu asistente educativo especializado en Machine Learning. Pregúntame sobre regresión lineal, MSE, descenso por gradiente o cualquier concepto del simulador.</div>
+                            </div>
+                        </div>
+                        <div class="chat-input-bar">
+                            <input id="chat-input" type="text" placeholder="Ej: ¿Qué es el learning rate?">
+                            <button id="chat-send" class="btn btn-primary">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>

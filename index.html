@@ -105,135 +105,430 @@
 
             <!-- ══ INICIO ══ -->
             <section class="page active" id="page-dashboard">
-                <div class="hero-section">
-                    <div class="hero-text">
-                        <div class="hero-eyebrow">Inteligencia Artificial · Descenso por Gradiente</div>
-                        <h1 class="hero-title">Simulador de Regresión<br>Lineal Simple</h1>
-                        <p class="hero-desc">Visualiza paso a paso cómo un modelo aprende: predicciones, errores, gradientes y actualización de parámetros — todo con tus propios datos.</p>
-                        <div class="hero-btns">
-                            <button class="btn btn-primary btn-lg" data-nav="datos">Comenzar simulación →</button>
-                            <button class="btn btn-ghost btn-lg" data-nav="education">Ver teoría</button>
+                <!-- Hero Section Mejorado -->
+                <div class="hero-section-v2">
+                    <div class="hero-content">
+                        <div class="hero-badge">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                            </svg>
+                            <span>Inteligencia Artificial · Descenso por Gradiente</span>
+                        </div>
+                        <h1 class="hero-title-v2">
+                            Simulador de Regresión<br>
+                            <span class="hero-gradient-text">Lineal Simple</span>
+                        </h1>
+                        <p class="hero-desc-v2">Visualiza paso a paso cómo un modelo aprende: predicciones, errores, gradientes y actualización de parámetros — todo con tus propios datos.</p>
+                        <div class="hero-actions">
+                            <button class="btn-hero btn-hero-primary" data-nav="datos">
+                                <span>Comenzar simulación</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                            <button class="btn-hero btn-hero-secondary" data-nav="education">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                                </svg>
+                                <span>Ver teoría</span>
+                            </button>
                         </div>
                     </div>
-                    <div class="hero-card">
-                        <div class="hero-formula-block">
-                            <div class="hf-row">ŷ = m · x + b</div>
-                            <div class="hf-divider"></div>
-                            <div class="hf-row small">m ← m − α · ∂E/∂m</div>
-                            <div class="hf-row small">b ← b − α · ∂E/∂b</div>
+                    <div class="hero-visual">
+                        <div class="formula-card-v2">
+                            <div class="formula-header">
+                                <div class="formula-dot"></div>
+                                <div class="formula-dot"></div>
+                                <div class="formula-dot"></div>
+                                <span class="formula-title">Modelo de Regresión</span>
+                            </div>
+                            <div class="formula-body">
+                                <div class="formula-main">ŷ = m · x + b</div>
+                                <div class="formula-divider"></div>
+                                <div class="formula-update">
+                                    <div class="formula-line">
+                                        <span class="formula-param">m</span>
+                                        <span class="formula-arrow">←</span>
+                                        <span class="formula-expr">m − α · ∂E/∂m</span>
+                                    </div>
+                                    <div class="formula-line">
+                                        <span class="formula-param">b</span>
+                                        <span class="formula-arrow">←</span>
+                                        <span class="formula-expr">b − α · ∂E/∂b</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats-mini">
+                            <div class="stat-mini-item">
+                                <div class="stat-mini-icon">📊</div>
+                                <div class="stat-mini-text">
+                                    <span class="stat-mini-label">Pendiente</span>
+                                    <strong class="stat-mini-val" id="dash-m-mini">—</strong>
+                                </div>
+                            </div>
+                            <div class="stat-mini-item">
+                                <div class="stat-mini-icon">📈</div>
+                                <div class="stat-mini-text">
+                                    <span class="stat-mini-label">Intercepto</span>
+                                    <strong class="stat-mini-val" id="dash-b-mini">—</strong>
+                                </div>
+                            </div>
+                            <div class="stat-mini-item">
+                                <div class="stat-mini-icon">🎯</div>
+                                <div class="stat-mini-text">
+                                    <span class="stat-mini-label">MSE</span>
+                                    <strong class="stat-mini-val" id="dash-mse-mini">—</strong>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="kpi-row">
-                    <div class="kpi-card">
-                        <div class="kpi-icon kpi-blue">m</div>
-                        <div class="kpi-body"><span class="kpi-label">Pendiente</span><strong class="kpi-val" id="dash-m">—</strong></div>
+                <!-- KPI Cards Mejoradas -->
+                <div class="metrics-grid">
+                    <div class="metric-card-v2 metric-blue">
+                        <div class="metric-header">
+                            <div class="metric-icon-v2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 3v18h18"/><path d="M18 17l-5-5-4 4-6-6"/>
+                                </svg>
+                            </div>
+                            <span class="metric-label-v2">Pendiente</span>
+                        </div>
+                        <div class="metric-value-v2" id="dash-m">—</div>
+                        <div class="metric-footer">Parámetro <strong>m</strong></div>
                     </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon kpi-cyan">b</div>
-                        <div class="kpi-body"><span class="kpi-label">Intercepto</span><strong class="kpi-val" id="dash-b">—</strong></div>
+
+                    <div class="metric-card-v2 metric-cyan">
+                        <div class="metric-header">
+                            <div class="metric-icon-v2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 3v18h18"/><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/>
+                                </svg>
+                            </div>
+                            <span class="metric-label-v2">Intercepto</span>
+                        </div>
+                        <div class="metric-value-v2" id="dash-b">—</div>
+                        <div class="metric-footer">Parámetro <strong>b</strong></div>
                     </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon kpi-green">E</div>
-                        <div class="kpi-body"><span class="kpi-label">MSE</span><strong class="kpi-val" id="dash-mse">—</strong></div>
+
+                    <div class="metric-card-v2 metric-green">
+                        <div class="metric-header">
+                            <div class="metric-icon-v2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                </svg>
+                            </div>
+                            <span class="metric-label-v2">Error MSE</span>
+                        </div>
+                        <div class="metric-value-v2" id="dash-mse">—</div>
+                        <div class="metric-footer">Error cuadrático medio</div>
                     </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon kpi-purple">#</div>
-                        <div class="kpi-body"><span class="kpi-label">Iteraciones</span><strong class="kpi-val" id="dash-iters">—</strong></div>
+
+                    <div class="metric-card-v2 metric-purple">
+                        <div class="metric-header">
+                            <div class="metric-icon-v2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                                </svg>
+                            </div>
+                            <span class="metric-label-v2">Iteraciones</span>
+                        </div>
+                        <div class="metric-value-v2" id="dash-iters">—</div>
+                        <div class="metric-footer">Actualizaciones completadas</div>
                     </div>
                 </div>
 
-                <div class="workflow-row">
-                    <div class="wf-card" data-nav="datos">
-                        <div class="wf-num">1</div>
-                        <h3>Configurar</h3>
-                        <p>Ingresa X, Y, parámetros y learning rate.</p>
-                        <span class="wf-link">Ir →</span>
+                <!-- Workflow Mejorado -->
+                <div class="workflow-section">
+                    <div class="section-header-v2">
+                        <h2 class="section-title-v2">Flujo de trabajo</h2>
+                        <p class="section-subtitle-v2">Sigue estos pasos para entrenar tu modelo de regresión lineal</p>
                     </div>
-                    <div class="wf-connector"></div>
-                    <div class="wf-card" data-nav="simulation">
-                        <div class="wf-num">2</div>
-                        <h3>Simular</h3>
-                        <p>Navega los 9 pasos de cada iteración.</p>
-                        <span class="wf-link">Ir →</span>
-                    </div>
-                    <div class="wf-connector"></div>
-                    <div class="wf-card" data-nav="charts">
-                        <div class="wf-num">3</div>
-                        <h3>Visualizar</h3>
-                        <p>Observa la recta y la convergencia del error.</p>
-                        <span class="wf-link">Ir →</span>
-                    </div>
-                    <div class="wf-connector"></div>
-                    <div class="wf-card" data-nav="chatbot">
-                        <div class="wf-num">4</div>
-                        <h3>Preguntar</h3>
-                        <p>Resuelve dudas con el asistente IA.</p>
-                        <span class="wf-link">Ir →</span>
+                    <div class="workflow-grid">
+                        <div class="workflow-card-v2" data-nav="datos">
+                            <div class="workflow-number">01</div>
+                            <div class="workflow-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                                </svg>
+                            </div>
+                            <h3 class="workflow-title">Configurar</h3>
+                            <p class="workflow-desc">Ingresa tus datos X e Y, define los parámetros iniciales y el learning rate</p>
+                            <div class="workflow-arrow">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="workflow-card-v2" data-nav="simulation">
+                            <div class="workflow-number">02</div>
+                            <div class="workflow-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                            </div>
+                            <h3 class="workflow-title">Simular</h3>
+                            <p class="workflow-desc">Navega por los 9 pasos de cada iteración del descenso por gradiente</p>
+                            <div class="workflow-arrow">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="workflow-card-v2" data-nav="charts">
+                            <div class="workflow-number">03</div>
+                            <div class="workflow-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+                                </svg>
+                            </div>
+                            <h3 class="workflow-title">Visualizar</h3>
+                            <p class="workflow-desc">Observa la línea de regresión ajustarse y el error converger</p>
+                            <div class="workflow-arrow">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="workflow-card-v2" data-nav="chatbot">
+                            <div class="workflow-number">04</div>
+                            <div class="workflow-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                </svg>
+                            </div>
+                            <h3 class="workflow-title">Preguntar</h3>
+                            <p class="workflow-desc">Resuelve tus dudas con el asistente de IA especializado</p>
+                            <div class="workflow-arrow workflow-arrow-end">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ══ CONFIGURACIÓN ══ -->
+            <!-- ══ CONFIGURACIÓN MEJORADA ══ -->
             <section class="page" id="page-datos">
                 <div class="page-top">
                     <h2 class="page-title">Configuración del modelo</h2>
-                    <p class="page-subtitle">Ingresa los datos de entrenamiento y los hiperparámetros.</p>
+                    <p class="page-subtitle">Ingresa los datos de entrenamiento y los parámetros del modelo.</p>
                 </div>
 
-                <div class="config-grid">
-                    <div class="card config-form">
-                        <h3 class="section-heading">Datos de entrenamiento</h3>
-                        <div class="form-row-2">
-                            <div class="form-group">
-                                <label for="input-x">Valores de X <em>(separados por comas)</em></label>
-                                <textarea id="input-x" rows="3" placeholder="1, 2, 3, 4, 5"></textarea>
+                <div class="config-layout">
+                    <!-- Columna Principal -->
+                    <div class="config-main">
+                        
+                        <!-- SECCIÓN 1: Variables de Entrenamiento -->
+                        <div class="config-card">
+                            <div class="config-card-header">
+                                <div class="config-header-left">
+                                    <div class="config-icon config-icon-blue">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+                                        </svg>
+                                    </div>
+                                    <div class="config-header-text">
+                                        <h3 class="config-card-title">1. Variables de entrenamiento</h3>
+                                        <p class="config-card-desc">Variable independiente X y variable dependiente y</p>
+                                    </div>
+                                </div>
+                                <div class="data-count-badge" id="data-count">0 pares</div>
                             </div>
-                            <div class="form-group">
-                                <label for="input-y">Valores de Y <em>(separados por comas)</em></label>
-                                <textarea id="input-y" rows="3" placeholder="2, 4, 5, 4, 5"></textarea>
+
+                            <div class="data-table-container">
+                                <table class="data-table-v2">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-punto">Punto</th>
+                                            <th class="col-x">
+                                                X
+                                                <span class="col-hint">(independiente)</span>
+                                            </th>
+                                            <th class="col-y">
+                                                y
+                                                <span class="col-hint">(dependiente)</span>
+                                            </th>
+                                            <th class="col-actions"></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div class="data-table-scroll">
+                                    <table class="data-table-v2 data-table-body">
+                                        <tbody id="data-rows"></tbody>
+                                    </table>
+                                </div>
+                                <div class="data-table-footer">
+                                    <button id="btn-add-row" class="btn-add-row" type="button">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                                        </svg>
+                                        <span>Agregar fila</span>
+                                    </button>
+                                    <button id="btn-clear-data" class="btn-clear-data" type="button">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        </svg>
+                                        <span>Limpiar todo</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="form-divider"><span>Parámetros iniciales</span></div>
+                        <!-- SECCIÓN 2: Parámetros Iniciales -->
+                        <div class="config-card">
+                            <div class="config-card-header">
+                                <div class="config-header-left">
+                                    <div class="config-icon config-icon-purple">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m0 6l4.2 4.2M23 12h-6m-6 0H1m18.2 5.2l-4.2-4.2m0-6l4.2-4.2"/>
+                                        </svg>
+                                    </div>
+                                    <div class="config-header-text">
+                                        <h3 class="config-card-title">2. Parámetros iniciales</h3>
+                                        <p class="config-card-desc">Valores de inicio para la recta ŷ = m·x + b</p>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div class="form-row-4">
-                            <div class="form-group">
-                                <label for="input-m">Pendiente m₀</label>
-                                <input id="input-m" type="number" step="0.01" value="0">
-                                <small>Inicio de la pendiente</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="input-b">Intercepto b₀</label>
-                                <input id="input-b" type="number" step="0.01" value="0">
-                                <small>Inicio del intercepto</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="input-lr">Learning rate α</label>
-                                <input id="input-lr" type="number" step="0.001" value="0.01">
-                                <small>Tamaño de cada paso</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="input-iters">Iteraciones</label>
-                                <input id="input-iters" type="number" value="10" min="1" max="1000">
-                                <small>Actualizaciones de m y b</small>
+                            <div class="params-grid">
+                                <div class="param-group">
+                                    <label class="param-label">
+                                        <span class="param-name">Pendiente m₀</span>
+                                        <span class="param-tooltip" tabindex="0">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                            </svg>
+                                            <span class="param-tooltip-text">Punto de partida para la pendiente de la recta. El algoritmo lo ajustará iteración a iteración.</span>
+                                        </span>
+                                    </label>
+                                    <div class="param-input-single">
+                                        <input id="input-m" class="param-input" type="number" step="0.01" value="0">
+                                    </div>
+                                </div>
+
+                                <div class="param-group">
+                                    <label class="param-label">
+                                        <span class="param-name">Intercepto b₀</span>
+                                        <span class="param-tooltip" tabindex="0">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                            </svg>
+                                            <span class="param-tooltip-text">Punto de partida para el intercepto (donde la recta corta el eje Y). También se ajusta durante el entrenamiento.</span>
+                                        </span>
+                                    </label>
+                                    <div class="param-input-single">
+                                        <input id="input-b" class="param-input" type="number" step="0.01" value="0">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
+                        <!-- SECCIÓN 3: Hiperparámetros -->
+                        <div class="config-card">
+                            <div class="config-card-header">
+                                <div class="config-header-left">
+                                    <div class="config-icon config-icon-green">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                        </svg>
+                                    </div>
+                                    <div class="config-header-text">
+                                        <h3 class="config-card-title">3. Hiperparámetros</h3>
+                                        <p class="config-card-desc">Controla la velocidad y estabilidad del aprendizaje</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="params-grid">
+                                <div class="param-group">
+                                    <label class="param-label">
+                                        <span class="param-name">Learning rate α</span>
+                                        <span class="param-tooltip" tabindex="0">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                            </svg>
+                                            <span class="param-tooltip-text">Tamaño de cada paso del descenso por gradiente. Muy alto → divergencia. Muy bajo → aprendizaje lento.</span>
+                                        </span>
+                                    </label>
+                                    <div class="param-input-single">
+                                        <input id="input-lr" class="param-input" type="number" step="0.001" min="0.0001" max="1" value="0.005">
+                                    </div>
+                                    <div class="lr-hint" id="lr-hint">⚡ Rango recomendado: 0.001 – 0.01</div>
+                                </div>
+
+                                <div class="param-group">
+                                    <label class="param-label">
+                                        <span class="param-name">Iteraciones</span>
+                                        <span class="param-tooltip" tabindex="0">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                            </svg>
+                                            <span class="param-tooltip-text">Número de veces que el modelo actualizará m y b usando todos los datos de entrenamiento.</span>
+                                        </span>
+                                    </label>
+                                    <div class="param-input-single">
+                                        <input id="input-iters" class="param-input" type="number" value="5" min="1" max="1000">
+                                    </div>
+                                    <small class="param-hint">Actualizaciones de m y b</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mensajes y Acciones -->
                         <div id="config-error" class="alert alert-error hidden"></div>
                         <div id="config-success" class="alert alert-success hidden"></div>
 
-                        <div class="form-actions">
-                            <button id="btn-start" class="btn btn-primary btn-lg">🚀 Iniciar Simulación</button>
-                            <button id="btn-reset" class="btn btn-ghost">Cargar ejemplo</button>
+                        <div class="config-actions">
+                            <button id="btn-start" class="btn-config-primary">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                                <span>Iniciar Simulación</span>
+                            </button>
+                            <button id="btn-reset" class="btn-config-secondary">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/>
+                                </svg>
+                                <span>Cargar ejemplo</span>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="card config-preview">
-                        <h3 class="section-heading">Vista previa de datos</h3>
-                        <div id="data-preview-table">
-                            <p class="muted-msg">Ingresa datos para ver la vista previa.</p>
+                    <!-- Columna Lateral: Vista Previa -->
+                    <div class="config-sidebar">
+                        <div class="preview-card">
+                            <div class="preview-header">
+                                <h3 class="preview-title">Vista previa</h3>
+                                <span class="preview-badge">θ (theta)</span>
+                            </div>
+                            <div class="theta-display">
+                                <div class="theta-row">
+                                    <span class="theta-label">b</span>
+                                    <span class="theta-value" id="theta-b">0.000000</span>
+                                </div>
+                                <div class="theta-row">
+                                    <span class="theta-label">m</span>
+                                    <span class="theta-value" id="theta-m">0.000000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-icon">💡</div>
+                            <h4 class="info-title">Consejos</h4>
+                            <ul class="info-list">
+                                <li>Ingresa al menos 2 pares de datos (X, y)</li>
+                                <li>Usa learning rate entre 0.001 y 0.01</li>
+                                <li>Comienza con 5-10 iteraciones</li>
+                                <li>Observa cómo converge el MSE</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -313,6 +608,7 @@
                 </div>
 
                 <div class="charts-grid">
+                    <!-- Gráfica principal: Iteración actual -->
                     <div class="card chart-card-main">
                         <div class="card-top-row">
                             <div>
@@ -329,6 +625,50 @@
                         </div>
                     </div>
 
+                    <!-- Nueva gráfica: Todas las iteraciones superpuestas -->
+                    <div class="card chart-card-main">
+                        <div class="card-top-row">
+                            <div>
+                                <h3>Comparador de iteraciones</h3>
+                                <p class="muted-msg">Compara diferentes iteraciones para ver la evolución del modelo</p>
+                            </div>
+                            <label class="toggle-pill">
+                                <input type="checkbox" id="toggle-all-iterations" checked>
+                                <span>Mostrar todas</span>
+                            </label>
+                        </div>
+
+                        <!-- Selector de iteraciones -->
+                        <div class="iteration-selector" id="iteration-selector">
+                            <div class="selector-header">
+                                <span class="selector-title">Selecciona iteraciones para comparar:</span>
+                                <button class="btn-selector-reset" id="btn-reset-selection">Restablecer</button>
+                            </div>
+                            <div class="selector-chips" id="selector-chips"></div>
+                        </div>
+
+                        <div class="chart-wrap">
+                            <canvas id="all-iterations-chart"></canvas>
+                        </div>
+
+                        <!-- Tabla de comparación -->
+                        <div class="comparison-table-container" id="comparison-table-container">
+                            <table class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Iteración</th>
+                                        <th>Pendiente (m)</th>
+                                        <th>Intercepto (b)</th>
+                                        <th>MSE</th>
+                                        <th>Mejora vs anterior</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="comparison-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Gráfica de convergencia MSE -->
                     <div class="card chart-card-error" id="error-chart-card">
                         <div class="card-top-row">
                             <div>
@@ -403,32 +743,86 @@
 
                 <div class="chatbot-grid">
                     <div class="card chatbot-config-panel">
-                        <h3 class="section-heading">Configuración</h3>
+                        <h3 class="section-heading">⚙️ Configuración</h3>
+                        
+                        <!-- Instrucciones destacadas -->
+                        <div class="api-instructions">
+                            <div class="instruction-icon">💡</div>
+                            <div class="instruction-text">
+                                <strong>¡Gemini es GRATIS!</strong>
+                                <p>Obtén tu API key gratuita en 2 minutos. No requiere tarjeta de crédito.</p>
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label for="provider-select">Proveedor</label>
+                            <label for="provider-select">Proveedor de IA</label>
                             <select id="provider-select">
-                                <option value="openai">OpenAI (GPT)</option>
-                                <option value="gemini">Google Gemini</option>
+                                <option value="gemini" selected>🟢 Google Gemini (Gratis)</option>
+                                <option value="openai">OpenAI GPT (Requiere pago)</option>
                             </select>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="api-key-input">API Key</label>
+                            <label for="api-key-input">
+                                API Key
+                                <span class="label-hint">(empieza con "AIzaSy...")</span>
+                            </label>
                             <input id="api-key-input" type="password" placeholder="Pega tu clave aquí...">
+                            <small class="input-hint">Tu clave se guarda solo en tu navegador 🔒</small>
                         </div>
-                        <button id="save-api-key" class="btn btn-primary">Guardar</button>
+                        
+                        <button id="test-api-key" class="btn btn-secondary btn-block" style="margin-bottom:8px">
+                            🔍 Probar conexión
+                        </button>
+                        <div id="test-api-result" style="display:none; padding:8px; border-radius:6px; font-size:0.85rem; margin-bottom:8px"></div>
 
-                        <div class="api-links">
-                            <p>🔒 La clave se guarda solo en tu navegador.</p>
-                            <p><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">→ Obtener key OpenAI</a></p>
-                            <p><a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">→ Obtener key Gemini</a></p>
+                        <button id="save-api-key" class="btn btn-primary btn-block">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                <polyline points="17 21 17 13 7 13 7 21"/>
+                                <polyline points="7 3 7 8 15 8"/>
+                            </svg>
+                            Guardar Configuración
+                        </button>
+
+                        <!-- Guía paso a paso -->
+                        <div class="api-guide">
+                            <h4 class="guide-title">📋 Cómo obtener tu API key (GRATIS):</h4>
+                            <ol class="guide-steps">
+                                <li>
+                                    <strong>Paso 1:</strong> Haz clic en el enlace de abajo
+                                    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="btn-guide-link">
+                                        🚀 Ir a Google AI Studio
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                            <polyline points="15 3 21 3 21 9"/>
+                                            <line x1="10" y1="14" x2="21" y2="3"/>
+                                        </svg>
+                                    </a>
+                                </li>
+                                <li><strong>Paso 2:</strong> Inicia sesión con tu cuenta de Google</li>
+                                <li><strong>Paso 3:</strong> Haz clic en "Create API Key"</li>
+                                <li><strong>Paso 4:</strong> Copia la clave (empieza con "AIzaSy")</li>
+                                <li><strong>Paso 5:</strong> Pégala arriba y haz clic en "Guardar"</li>
+                            </ol>
+                            <div class="guide-note">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="16" x2="12" y2="12"/>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                </svg>
+                                <span>Límites gratuitos: 60 consultas/minuto, 1,500/día</span>
+                            </div>
                         </div>
 
+                        <!-- Preguntas sugeridas -->
                         <div class="suggested-questions">
-                            <p class="sq-title">Preguntas sugeridas</p>
+                            <p class="sq-title">💬 Preguntas sugeridas:</p>
                             <button class="sq-btn" data-q="¿Qué es el descenso por gradiente?">¿Qué es el descenso por gradiente?</button>
                             <button class="sq-btn" data-q="¿Cómo afecta el learning rate al entrenamiento?">¿Cómo afecta el learning rate?</button>
                             <button class="sq-btn" data-q="¿Qué pasa si el MSE no converge?">¿Qué pasa si el MSE no converge?</button>
                             <button class="sq-btn" data-q="Explícame la fórmula de la pendiente m">Explícame la fórmula de m</button>
+                            <button class="sq-btn" data-q="¿Cómo se calculan los gradientes?">¿Cómo se calculan los gradientes?</button>
                         </div>
                     </div>
 
@@ -436,12 +830,26 @@
                         <div id="chat-messages" class="chat-messages">
                             <div class="msg-row assistant">
                                 <div class="msg-avatar">🤖</div>
-                                <div class="msg-bubble">¡Hola! Soy tu asistente educativo especializado en Machine Learning. Pregúntame sobre regresión lineal, MSE, descenso por gradiente o cualquier concepto del simulador.</div>
+                                <div class="msg-bubble">
+                                    ¡Hola! Soy tu asistente educativo especializado en Machine Learning.<br><br>
+                                    Puedo ayudarte con:<br>
+                                    • Regresión lineal simple<br>
+                                    • Descenso por gradiente<br>
+                                    • Error cuadrático medio (MSE)<br>
+                                    • Learning rate y convergencia<br>
+                                    • Interpretación de resultados<br><br>
+                                    <strong>⚠️ Primero configura tu API key de Gemini (es gratis) →</strong>
+                                </div>
                             </div>
                         </div>
                         <div class="chat-input-bar">
-                            <input id="chat-input" type="text" placeholder="Ej: ¿Qué es el learning rate?">
-                            <button id="chat-send" class="btn btn-primary">Enviar</button>
+                            <input id="chat-input" type="text" placeholder="Ej: ¿Qué es el learning rate?" autocomplete="off">
+                            <button id="chat-send" class="btn btn-primary">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"/>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>

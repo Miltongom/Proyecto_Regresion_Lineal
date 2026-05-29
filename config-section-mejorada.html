@@ -1,0 +1,221 @@
+<!-- ══ CONFIGURACIÓN MEJORADA ══ -->
+<!-- Reemplazar desde <section class="page" id="page-datos"> hasta </section> -->
+
+<section class="page" id="page-datos">
+    <div class="page-top">
+        <h2 class="page-title">Configuración del modelo</h2>
+        <p class="page-subtitle">Ingresa los datos de entrenamiento y los parámetros del modelo.</p>
+    </div>
+
+    <div class="config-layout">
+        <!-- Columna Principal -->
+        <div class="config-main">
+            
+            <!-- SECCIÓN 1: Variables de Entrenamiento -->
+            <div class="config-card">
+                <div class="config-card-header">
+                    <div class="config-header-left">
+                        <div class="config-icon config-icon-blue">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+                            </svg>
+                        </div>
+                        <div class="config-header-text">
+                            <h3 class="config-card-title">1. Variables de entrenamiento</h3>
+                            <p class="config-card-desc">Variable independiente X y variable dependiente y</p>
+                        </div>
+                    </div>
+                    <div class="data-count-badge" id="data-count">0 pares</div>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table-v2">
+                        <thead>
+                            <tr>
+                                <th class="col-punto">Punto</th>
+                                <th class="col-x">
+                                    X
+                                    <span class="col-hint">(independiente)</span>
+                                </th>
+                                <th class="col-y">
+                                    y
+                                    <span class="col-hint">(dependiente)</span>
+                                </th>
+                                <th class="col-actions"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="data-table-scroll">
+                        <table class="data-table-v2 data-table-body">
+                            <tbody id="data-rows"></tbody>
+                        </table>
+                    </div>
+                    <div class="data-table-footer">
+                        <button id="btn-add-row" class="btn-add-row" type="button">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            <span>Agregar fila</span>
+                        </button>
+                        <button id="btn-clear-data" class="btn-clear-data" type="button">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                            <span>Limpiar todo</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: Parámetros Iniciales -->
+            <div class="config-card">
+                <div class="config-card-header">
+                    <div class="config-header-left">
+                        <div class="config-icon config-icon-purple">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m0 6l4.2 4.2M23 12h-6m-6 0H1m18.2 5.2l-4.2-4.2m0-6l4.2-4.2"/>
+                            </svg>
+                        </div>
+                        <div class="config-header-text">
+                            <h3 class="config-card-title">2. Parámetros iniciales</h3>
+                            <p class="config-card-desc">Valores de inicio para la recta ŷ = m·x + b</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="params-grid">
+                    <div class="param-group">
+                        <label class="param-label">
+                            <span class="param-name">Pendiente m₀</span>
+                            <span class="param-tooltip" tabindex="0">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                                <span class="param-tooltip-text">Punto de partida para la pendiente de la recta. El algoritmo lo ajustará iteración a iteración.</span>
+                            </span>
+                        </label>
+                        <div class="param-input-single">
+                            <input id="input-m" class="param-input" type="number" step="0.01" value="0">
+                        </div>
+                    </div>
+
+                    <div class="param-group">
+                        <label class="param-label">
+                            <span class="param-name">Intercepto b₀</span>
+                            <span class="param-tooltip" tabindex="0">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                                <span class="param-tooltip-text">Punto de partida para el intercepto (donde la recta corta el eje Y). También se ajusta durante el entrenamiento.</span>
+                            </span>
+                        </label>
+                        <div class="param-input-single">
+                            <input id="input-b" class="param-input" type="number" step="0.01" value="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: Hiperparámetros -->
+            <div class="config-card">
+                <div class="config-card-header">
+                    <div class="config-header-left">
+                        <div class="config-icon config-icon-green">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                        </div>
+                        <div class="config-header-text">
+                            <h3 class="config-card-title">3. Hiperparámetros</h3>
+                            <p class="config-card-desc">Controla la velocidad y estabilidad del aprendizaje</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="params-grid">
+                    <div class="param-group">
+                        <label class="param-label">
+                            <span class="param-name">Learning rate α</span>
+                            <span class="param-tooltip" tabindex="0">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                                <span class="param-tooltip-text">Tamaño de cada paso del descenso por gradiente. Muy alto → divergencia. Muy bajo → aprendizaje lento.</span>
+                            </span>
+                        </label>
+                        <div class="param-input-single">
+                            <input id="input-lr" class="param-input" type="number" step="0.001" min="0.0001" max="1" value="0.005">
+                        </div>
+                        <div class="lr-hint" id="lr-hint">⚡ Rango recomendado: 0.001 – 0.01</div>
+                    </div>
+
+                    <div class="param-group">
+                        <label class="param-label">
+                            <span class="param-name">Iteraciones</span>
+                            <span class="param-tooltip" tabindex="0">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                                <span class="param-tooltip-text">Número de veces que el modelo actualizará m y b usando todos los datos de entrenamiento.</span>
+                            </span>
+                        </label>
+                        <div class="param-input-single">
+                            <input id="input-iters" class="param-input" type="number" value="5" min="1" max="1000">
+                        </div>
+                        <small class="param-hint">Actualizaciones de m y b</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mensajes y Acciones -->
+            <div id="config-error" class="alert alert-error hidden"></div>
+            <div id="config-success" class="alert alert-success hidden"></div>
+
+            <div class="config-actions">
+                <button id="btn-start" class="btn-config-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                    <span>Iniciar Simulación</span>
+                </button>
+                <button id="btn-reset" class="btn-config-secondary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/>
+                    </svg>
+                    <span>Cargar ejemplo</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Columna Lateral: Vista Previa -->
+        <div class="config-sidebar">
+            <div class="preview-card">
+                <div class="preview-header">
+                    <h3 class="preview-title">Vista previa</h3>
+                    <span class="preview-badge">θ (theta)</span>
+                </div>
+                <div class="theta-display">
+                    <div class="theta-row">
+                        <span class="theta-label">b</span>
+                        <span class="theta-value" id="theta-b">0.000000</span>
+                    </div>
+                    <div class="theta-row">
+                        <span class="theta-label">m</span>
+                        <span class="theta-value" id="theta-m">0.000000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">💡</div>
+                <h4 class="info-title">Consejos</h4>
+                <ul class="info-list">
+                    <li>Ingresa al menos 2 pares de datos (X, y)</li>
+                    <li>Usa learning rate entre 0.001 y 0.01</li>
+                    <li>Comienza con 5-10 iteraciones</li>
+                    <li>Observa cómo converge el MSE</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

@@ -345,64 +345,379 @@ class SimulationController {
     }
 
     generateTableHTML(iterationData, stepIndex) {
-        // Columnas resaltadas por paso (sin columna e·x — no aparece en la hoja Excel)
-        const highlightMap = {
-            0: [],
-            1: ['yHat'],
-            2: ['errors'],
-            3: ['squaredErrors'],
-            4: ['squaredErrors'],
-            5: ['yHat', 'errors'],
-            6: ['errors'],
-            7: [],
-            8: ['yHat', 'errors']
+        const xValues = this.engine.xData;
+        const yValues = this.engine.yData;
+        const n = xValues.length;
+        const fmt = v => this.formatNumber(v);
+        const fmt6 = v => Number(v).toFixed(6);
+        const displayErrors = iterationData.yHat.map((yh, i) => yh - yValues[i]);
+
+        // Función helper para generar filas de la tabla principal
+        const generateMainTableRows = (showYHat, showError, showError2) => {
+            return xValues.map((x, i) => {
+                const e = displayErrors[i];
+                return `<tr>
+                    <td>${fmt(x)}</td>
+                    <td>${fmt(yValues[i])}</td>
+                    ${showYHat ? `<td class="it-pred it-hl">${fmt(iterationData.yHat[i])}</td>` : '<td class="it-empty">—</td>'}
+                    ${showError ? `<td class="${this.getErrorClass(e)} it-hl">${fmt(e)}</td>` : '<td class="it-empty">—</td>'}
+                    ${showError2 ? `<td class="it-sq it-hl">${fmt(iterationData.squaredErrors[i])}</td>` : '<td class="it-empty">—</td>'}
+                </tr>`;
+            }).join('');
         };
 
-        const highlighted = highlightMap[stepIndex] || [];
-
-        const rows = this.engine.xData.map((x, index) => {
-            // Convención Excel: error = y^ − y
-            const displayError = iterationData.yHat[index] - this.engine.yData[index];
-            const errorClass = this.getErrorClass(displayError);
+        // PASO 0: Solo theta inicial
+        if (stepIndex === 0) {
             return `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${this.formatNumber(x)}</td>
-                    <td>${this.formatNumber(this.engine.yData[index])}</td>
-                    <td class="${highlighted.includes('yHat') ? 'highlight-col ' : ''}prediction-text">${this.formatNumber(iterationData.yHat[index])}</td>
-                    <td class="${highlighted.includes('errors') ? 'highlight-col ' : ''}${errorClass}">${this.formatNumber(displayError)}</td>
-                    <td class="${highlighted.includes('squaredErrors') ? 'highlight-col ' : ''}">${this.formatNumber(iterationData.squaredErrors[index])}</td>
-                </tr>
-            `;
+            <div class="iter-layout">
+                <div class="iter-row" style="justify-content:center">
+                    <div class="iter-block">
+                        <table class="iter-tbl iter-theta-tbl">
+                            <thead><tr><th colspan="2" class="it-head-center">theta (θ)</th></tr></thead>
+                            <tbody>
+                                <tr><td class="it-theta-val it-hl">${fmt6(iterationData.b_before)}</td><td class="it-theta-lbl">b</td></tr>
+                                <tr><td class="it-theta-val it-hl">${fmt6(iterationData.m_before)}</td><td class="it-theta-lbl">m</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // PASO 1: X, y, y^ (predicciones)
+        if (stepIndex === 1) {
+            return `
+            <div class="iter-layout">
+                <div class="iter-row">
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead><tr>
+                                <th>X</th>
+                                <th>y</th>
+                                <th class="it-hl-th">y^</th>
+                                <th>error</th>
+                                <th>error^2</th>
+                            </tr></thead>
+                            <tbody>${generateMainTableRows(true, false, false)}</tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // PASO 2: X, y, y^, error
+        if (stepIndex === 2) {
+            return `
+            <div class="iter-layout">
+                <div class="iter-row">
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead><tr>
+                                <th>X</th>
+                                <th>y</th>
+                                <th>y^</th>
+                                <th class="it-hl-th">error</th>
+                                <th>error^2</th>
+                            </tr></thead>
+                            <tbody>${generateMainTableRows(true, true, false)}</tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // PASO 3: X, y, y^, error, error^2
+        if (stepIndex === 3) {
+            return `
+            <div class="iter-layout">
+                <div class="iter-row">
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead><tr>
+                                <th>X</th>
+                                <th>y</th>
+                                <th>y^</th>
+                                <th>error</th>
+                                <th class="it-hl-th">error^2</th>
+                            </tr></thead>
+                            <tbody>${generateMainTableRows(true, true, true)}</tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // PASO 4: Tabla completa + MSE
+        if (stepIndex === 4) {
+            const mainRows = xValues.map((x, i) => {
+                const e = displayErrors[i];
+                return `<tr>
+                    <td>${fmt(x)}</td>
+                    <td>${fmt(yValues[i])}</td>
+                    <td class="it-pred">${fmt(iterationData.yHat[i])}</td>
+                    <td class="${this.getErrorClass(e)}">${fmt(e)}</td>
+                    <td class="it-sq it-hl">${fmt(iterationData.squaredErrors[i])}</td>
+                </tr>`;
+            }).join('');
+
+            return `
+            <div class="iter-layout">
+                <div class="iter-row">
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead><tr>
+                                <th>X</th>
+                                <th>y</th>
+                                <th>y^</th>
+                                <th>error</th>
+                                <th>error^2</th>
+                            </tr></thead>
+                            <tbody>${mainRows}</tbody>
+                            <tfoot><tr>
+                                <td colspan="3" class="it-foot-label">Error del<br>modelo</td>
+                                <td colspan="2" class="it-foot-val it-hl">${fmt6(iterationData.mse)}</td>
+                            </tr></tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // PASO 5: Matrices (X_b, Transpuesta, error)
+        if (stepIndex === 5) {
+            const xbRows = xValues.map(x => `<tr><td>1</td><td>${fmt(x)}</td></tr>`).join('');
+            const tXbRow1 = xValues.map(() => `<td>1</td>`).join('');
+            const tXbRow2 = xValues.map(x => `<td>${fmt(x)}</td>`).join('');
+            const errorRows = displayErrors.map(e => `<tr><td class="${this.getErrorClass(e)}">${fmt(e)}</td></tr>`).join('');
+
+            return `
+            <div class="iter-layout">
+                <div class="iter-row" style="justify-content:center;gap:24px">
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead>
+                                <tr><th colspan="2" class="it-head-center">X_b</th></tr>
+                                <tr><th>unos</th><th>X</th></tr>
+                            </thead>
+                            <tbody>${xbRows}</tbody>
+                        </table>
+                    </div>
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead><tr><th colspan="${n}" class="it-head-center">Transpuesta de X_b</th></tr></thead>
+                            <tbody>
+                                <tr>${tXbRow1}</tr>
+                                <tr>${tXbRow2}</tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead><tr><th class="it-head-center">error</th></tr></thead>
+                            <tbody>${errorRows}</tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // PASO 6: Gradiente ∂E/∂b
+        if (stepIndex === 6) {
+            const errorRows = displayErrors.map(e => `<tr><td class="${this.getErrorClass(e)} it-hl">${fmt(e)}</td></tr>`).join('');
+            const errorSum = displayErrors.reduce((s, v) => s + v, 0);
+
+            return `
+            <div class="iter-layout">
+                <div class="iter-row" style="justify-content:center;gap:24px">
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead><tr><th class="it-head-center">error</th></tr></thead>
+                            <tbody>${errorRows}</tbody>
+                            <tfoot><tr><td class="it-foot-val">Σ = ${fmt(errorSum)}</td></tr></tfoot>
+                        </table>
+                    </div>
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead><tr><th class="it-head-center">Gradientes</th></tr></thead>
+                            <tbody>
+                                <tr><td class="it-grad it-hl">∂E/∂b = ${fmt6(iterationData.gradB)}</td></tr>
+                                <tr><td class="it-grad">∂E/∂m = —</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // PASO 7: Gradiente ∂E/∂m
+        if (stepIndex === 7) {
+            const products = displayErrors.map((e, i) => e * xValues[i]);
+            const productRows = products.map((p, i) => 
+                `<tr><td class="it-hl">${fmt(displayErrors[i])} × ${fmt(xValues[i])} = ${fmt(p)}</td></tr>`
+            ).join('');
+            const productSum = products.reduce((s, v) => s + v, 0);
+
+            return `
+            <div class="iter-layout">
+                <div class="iter-row" style="justify-content:center;gap:24px">
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead><tr><th class="it-head-center">error × X</th></tr></thead>
+                            <tbody>${productRows}</tbody>
+                            <tfoot><tr><td class="it-foot-val">Σ = ${fmt(productSum)}</td></tr></tfoot>
+                        </table>
+                    </div>
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead><tr><th class="it-head-center">Gradientes</th></tr></thead>
+                            <tbody>
+                                <tr><td class="it-grad">∂E/∂b = ${fmt6(iterationData.gradB)}</td></tr>
+                                <tr><td class="it-grad it-hl">∂E/∂m = ${fmt6(iterationData.gradM)}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // PASO 8: Actualización de theta
+        if (stepIndex === 8) {
+            return `
+            <div class="iter-layout">
+                <div class="iter-row" style="justify-content:center;gap:24px">
+                    <div class="iter-block">
+                        <table class="iter-tbl iter-theta-tbl">
+                            <thead><tr><th colspan="2" class="it-head-center">theta anterior</th></tr></thead>
+                            <tbody>
+                                <tr><td class="it-theta-val">${fmt6(iterationData.b_before)}</td><td class="it-theta-lbl">b</td></tr>
+                                <tr><td class="it-theta-val">${fmt6(iterationData.m_before)}</td><td class="it-theta-lbl">m</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="iter-block">
+                        <table class="iter-tbl">
+                            <thead><tr><th class="it-head-center">Gradientes</th></tr></thead>
+                            <tbody>
+                                <tr><td class="it-grad">∂E/∂b = ${fmt6(iterationData.gradB)}</td></tr>
+                                <tr><td class="it-grad">∂E/∂m = ${fmt6(iterationData.gradM)}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="iter-block">
+                        <table class="iter-tbl iter-theta-tbl">
+                            <thead><tr><th colspan="2" class="it-head-center">Nuevo valor de theta</th></tr></thead>
+                            <tbody>
+                                <tr><td class="it-theta-val it-new it-hl">${fmt6(iterationData.newB)}</td><td class="it-theta-lbl">b</td></tr>
+                                <tr><td class="it-theta-val it-new it-hl">${fmt6(iterationData.newM)}</td><td class="it-theta-lbl">m</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // Fallback: mostrar todo
+        return this.generateCompleteTableHTML(iterationData);
+    }
+
+    generateCompleteTableHTML(iterationData) {
+        const xValues = this.engine.xData;
+        const yValues = this.engine.yData;
+        const n = xValues.length;
+        const fmt = v => this.formatNumber(v);
+        const fmt6 = v => Number(v).toFixed(6);
+        const displayErrors = iterationData.yHat.map((yh, i) => yh - yValues[i]);
+
+        const mainRows = xValues.map((x, i) => {
+            const e = displayErrors[i];
+            return `<tr>
+                <td>${fmt(x)}</td>
+                <td>${fmt(yValues[i])}</td>
+                <td class="it-pred">${fmt(iterationData.yHat[i])}</td>
+                <td class="${this.getErrorClass(e)}">${fmt(e)}</td>
+                <td class="it-sq">${fmt(iterationData.squaredErrors[i])}</td>
+            </tr>`;
         }).join('');
 
-        const squaredSum = iterationData.squaredErrors.reduce((s, v) => s + v, 0);
+        const xbRows = xValues.map(x => `<tr><td>1</td><td>${fmt(x)}</td></tr>`).join('');
+        const tXbRow1 = xValues.map(() => `<td>1</td>`).join('');
+        const tXbRow2 = xValues.map(x => `<td>${fmt(x)}</td>`).join('');
+        const errorRows = displayErrors.map(e => `<tr><td class="${this.getErrorClass(e)}">${fmt(e)}</td></tr>`).join('');
 
         return `
-            <div class="table-scroll data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Punto</th>
+        <div class="iter-layout">
+            <div class="iter-row">
+                <div class="iter-block">
+                    <table class="iter-tbl">
+                        <thead><tr>
                             <th>X</th>
                             <th>y</th>
-                            <th class="${highlighted.includes('yHat') ? 'highlight-col' : ''}">y^</th>
-                            <th class="${highlighted.includes('errors') ? 'highlight-col' : ''}">error</th>
-                            <th class="${highlighted.includes('squaredErrors') ? 'highlight-col' : ''}">error²</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${rows}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="5" style="text-align:right"><strong>MSE = Σerror² / n =</strong></td>
-                            <td class="${highlighted.includes('squaredErrors') ? 'highlight-col ' : ''}"><strong>${this.formatNumber(iterationData.mse)}</strong></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                            <th>y^</th>
+                            <th>error</th>
+                            <th>error^2</th>
+                        </tr></thead>
+                        <tbody>${mainRows}</tbody>
+                        <tfoot><tr>
+                            <td colspan="3" class="it-foot-label">Error del<br>modelo</td>
+                            <td colspan="2" class="it-foot-val">${fmt6(iterationData.mse)}</td>
+                        </tr></tfoot>
+                    </table>
+                </div>
+                <div class="iter-block">
+                    <table class="iter-tbl">
+                        <thead>
+                            <tr><th colspan="2" class="it-head-center">X_b</th></tr>
+                            <tr><th>unos</th><th>X</th></tr>
+                        </thead>
+                        <tbody>${xbRows}</tbody>
+                    </table>
+                </div>
+                <div class="iter-block">
+                    <table class="iter-tbl iter-theta-tbl">
+                        <thead><tr><th colspan="2" class="it-head-center">theta</th></tr></thead>
+                        <tbody>
+                            <tr><td class="it-theta-val">${fmt6(iterationData.b_before)}</td><td class="it-theta-lbl">b</td></tr>
+                            <tr><td class="it-theta-val">${fmt6(iterationData.m_before)}</td><td class="it-theta-lbl">m</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        `;
+            <div class="iter-row" style="margin-top:16px">
+                <div class="iter-block">
+                    <table class="iter-tbl">
+                        <thead><tr><th colspan="${n}" class="it-head-center">Transpuesta de X_b</th></tr></thead>
+                        <tbody>
+                            <tr>${tXbRow1}</tr>
+                            <tr>${tXbRow2}</tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="iter-block">
+                    <table class="iter-tbl">
+                        <thead><tr><th class="it-head-center">error</th></tr></thead>
+                        <tbody>${errorRows}</tbody>
+                    </table>
+                </div>
+                <div class="iter-block">
+                    <table class="iter-tbl">
+                        <thead><tr><th class="it-head-center">Gradientes</th></tr></thead>
+                        <tbody>
+                            <tr><td class="it-grad">${fmt6(iterationData.gradB)}</td></tr>
+                            <tr><td class="it-grad">${fmt6(iterationData.gradM)}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="iter-block">
+                    <table class="iter-tbl iter-theta-tbl">
+                        <thead><tr><th colspan="2" class="it-head-center">Nuevo valor de theta</th></tr></thead>
+                        <tbody>
+                            <tr><td class="it-theta-val it-new">${fmt6(iterationData.newB)}</td><td class="it-theta-lbl">b</td></tr>
+                            <tr><td class="it-theta-val it-new">${fmt6(iterationData.newM)}</td><td class="it-theta-lbl">m</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>`;
     }
 
     getEducationalExplanation(stepIndex) {
